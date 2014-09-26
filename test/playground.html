@@ -1,0 +1,60 @@
+<html>
+<head>
+	<script src="../src/straps.js" autodetect="true"></script>
+	<link href="playground.css" rel="stylesheet">
+	<link rel="shortcut icon" href="favicon.png">
+
+	<title>Straps - Playground</title>
+
+</head>
+<body>
+
+	<header>
+		<h1><strong>Straps</strong></h1>
+		<h3>Playground</h3>
+	</header>
+
+	<container>
+		<section>
+			<form method="post" action="#" id="form1" straps-autosize="true" straps-theme="pure">
+				<fieldset>
+					<h2>Straps Form</h2>
+
+					<h3>Default Input Fields</h3>
+
+					<field>
+						<label>Name</label>
+						<input name="lastname" validation="true" default="" />
+					</field>
+					<field>
+						<label>Multi Name</label>
+						<input name="mfirst" />
+						<input name="mlast" />
+					</field>
+					<field>
+						<label>ZIP</label>
+						<input name="zip" size="5" />
+					</field>
+
+					<field>
+						<label>Numeric</label>
+						<input name="numbers" numeric />
+					</field>
+
+
+					</field>
+
+					<field>
+						<input type="submit" straps-primary-submit />
+
+					</field>
+				</fieldset>
+			</form>
+		</section>
+		
+
+		<clear/>
+	</container>
+
+
+</body>
