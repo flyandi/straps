@@ -88,7 +88,7 @@ var Straps = {
     // (find) 
     find: function(query, target, fn) {
         // check callback
-        if(typeof(target) == "function") {
+        if(typeof target == "function") {
             fn = target;
             target = false;
         }
@@ -98,15 +98,20 @@ var Straps = {
         var result = target.querySelectorAll(query);
         // run cycle
         switch(true) {
-            case typeof(fn)=="function":
+            case typeof fn == "function":
                 result.cycle(function(i, r) {
-                    if(typeof(r)=="object") {
+                    if(r instanceof HTMLElement) {
                         fn(r);
                     }
                 });
                 break;
-            case typeof(fn)=="number":
-                result = result[fn] ? result[fn] : false;
+                
+            case typeof fn == "number":
+                result = result[fn] && result[fn] instanceof HTMLElement ? result[fn] : false;
+                break;
+
+            default:
+                result = result.toElementList();
                 break;
         } 
         // return result
@@ -188,7 +193,7 @@ var Straps = {
             // attach
             this.__attachscript(this.scriptPath + 'modules/straps.' + name + '.js', function() {
                 // execute callback
-                if(typeof(cb) == "function") {
+                if(typeof cb == "function") {
                     cb();
                 }
             });
@@ -219,7 +224,7 @@ var Straps = {
                 break;
         }
         // event
-        if(typeof(cb)=="function") element.onload = function() {
+        if(typeof cb == "function") element.onload = function() {
             cb();
         };
         // run
@@ -233,7 +238,29 @@ var Straps = {
         Object.prototype.cycle = function(fn) {
             var ref = this;
             Object.keys(this).forEach(function(key) {
-                fn(key, ref[key]);
+                if(typeof fn == "function") {
+                    try {
+                        fn(key, ref[key]);
+                    } catch(e) {
+                        alert(e);
+                    }
+                }
+            });
+        };
+
+        // object::toElementList
+        Object.prototype.toElementList = function() {
+            var list = [];
+            this.cycle(function(index, o) {
+                if(o instanceof HTMLElement) list.push(o);
+            });
+            return list;
+        };
+
+        // array::cycle
+        Array.prototype.cycle = function(fn) {
+            this.forEach(function(value, key) {
+                if(typeof fn == "function") fn(key, value);
             });
         };
     },
@@ -249,8 +276,10 @@ var Straps = {
     Straps.__prototypes();
 
     // load bootstrap
-    document.addEventListener("DOMContentLoaded", function() {
-       Straps.__load();
+    window.addEventListener("load", function() {
+        setTimeout(function() {
+            Straps.__load();
+        }, 1);
     }, false);
 })();
 

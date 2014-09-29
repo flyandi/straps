@@ -26,6 +26,18 @@ module.exports = function (grunt) {
             }
         },
 
+        cssmin: {   
+            dist: {
+                options: {
+                    banner: '/* Straps Reset Stylesheet <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */'
+                },
+                files: {
+                    'build/<%= pkg.name %>.css': ['src/css/*.css']
+                }
+            }
+        },
+
+
         jshint: {
             files: ['Gruntfile.js', 'src/**/*.js'],
             options: {
@@ -36,6 +48,10 @@ module.exports = function (grunt) {
                   document: true
                 }
              }
+        },
+
+        copy: {
+
         },
     
         watch: {
@@ -48,9 +64,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
 
     /** (tasks) */
-    grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'cssmin']);
 
 };

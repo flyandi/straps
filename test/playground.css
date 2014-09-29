@@ -41,7 +41,3 @@ form h3 {
 form fieldset {
 	border:0;
 }
-
-form fieldset field {
-	display:block;
-}

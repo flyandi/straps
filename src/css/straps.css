@@ -1,0 +1,16 @@
+form {
+	display:block;
+}
+
+form fieldset {
+	display:block;
+}
+
+form fieldset field {
+	display:block;
+}
+
+form label {
+	display:inline-block;
+}
+

@@ -78,20 +78,16 @@ var __straps_instance_form = (function(){
                     inputWidth = Math.round(((aspects.width * 0.6) - ((inputs.length - 1) * 3)) / inputs.length);
 
                 // assign
-                
+                if(label) {
+                    label.style.width = labelWidth + "px";
+                }
 
-                // assign
-                label.style.width = labelWidth + "px";
-                //label.width(labelWidth);
-                //inputs.width(inputWidth);
-
+                // cycle inputs
+                inputs.cycle(function(i, p) {
+                    p.style.width = inputWidth + "px";
+                });
 
             });
-
-            // assign button
-            //this.target.find("input[type=submit],button").addClass("-straps-button");
-            // assign primary button
-            //this.target.find("[straps-primary-submit]").addClass("-straps-button-primary");
 
         },
     };
