@@ -85,6 +85,34 @@ var Straps = {
         });
     },
 
+    // (find) 
+    find: function(query, target, fn) {
+        // check callback
+        if(typeof(target) == "function") {
+            fn = target;
+            target = false;
+        }
+        // test target
+        if(!target) target = document;
+        // execute query
+        var result = target.querySelectorAll(query);
+        // run cycle
+        switch(true) {
+            case typeof(fn)=="function":
+                result.cycle(function(i, r) {
+                    if(typeof(r)=="object") {
+                        fn(r);
+                    }
+                });
+                break;
+            case typeof(fn)=="number":
+                result = result[fn] ? result[fn] : false;
+                break;
+        } 
+        // return result
+        return result;
+    },
+
     // (__load) 
     __load: function() {
         // initialize
@@ -289,33 +317,37 @@ var __straps_instance_form = (function(){
         __autosize: function() {
 
             // get aspects
-            var aspects = {
+            var that = this, aspects = {
                 width: this.target.clientWidth
             };
 
-            // find fields and just labels
-            this.target.find("field").each(function() {
+            // find fields
+            this.parent.find("field", this.target, function(field) {
+
                 // initial
-                var label = $(this).find("label"),
-                    inputs = $(this).find("input:not([type=submit]) ,select");
+                var label = that.parent.find("label", field, 0),
+                    inputs = that.parent.find("input:not([type=submit]),select", field);
+
 
                 // calculate
                 var labelWidth = aspects.width * 0.3,
                     inputWidth = Math.round(((aspects.width * 0.6) - ((inputs.length - 1) * 3)) / inputs.length);
 
+                // assign
+                
 
                 // assign
-                label.width(labelWidth);
-                inputs.width(inputWidth);
-
+                label.style.width = labelWidth + "px";
+                //label.width(labelWidth);
+                //inputs.width(inputWidth);
 
 
             });
 
             // assign button
-            this.target.find("input[type=submit],button").addClass("-straps-button");
+            //this.target.find("input[type=submit],button").addClass("-straps-button");
             // assign primary button
-            this.target.find("[straps-primary-submit]").addClass("-straps-button-primary");
+            //this.target.find("[straps-primary-submit]").addClass("-straps-button-primary");
 
         },
     };
@@ -485,9 +517,6 @@ var __straps_instance_theme = (function(){
 
     __straps_instance_theme.prototype = {
 
-        // (private)
-        strapsform: false,
-
         // (constructor)
         __construct: function() {
 
@@ -497,72 +526,7 @@ var __straps_instance_theme = (function(){
         attach: function(target) {
             // initialize
             var that = this;
-
-            // assign target
-            this.target = $(target);
-
-            // check attributes
-            this.parent.cycleAttributes(target, {
-                styles: ['true', function() {
-                    // add class
-                    that.target.addClass("-straps-form");
-                    // assign
-                    that.strapsform = true;
-                }]
-            });
-
-
-/*
-            // attach events
-            $(target).bind({
-                'submit': function() {
-                    
-                    return false;
-                }
-            });*/
-
-            // apply strapsform
-            if(this.strapsform) {
-                this.__applystyles();
-            }
-
-        },
-
-        // (__applystyles)
-        __applystyles: function() {
-
-            // get aspects
-            var aspects = {
-                width: this.target.width()
-            };
-
-            alert(aspects.width);
-
-            // find fields and just labels
-            this.target.find("field").each(function() {
-                // initial
-                var label = $(this).find("label"),
-                    inputs = $(this).find("input:not([type=submit]) ,select");
-
-                // calculate
-                var labelWidth = aspects.width * 0.3,
-                    inputWidth = Math.round(((aspects.width * 0.6) - ((inputs.length - 1) * 3)) / inputs.length);
-
-
-                // assign
-                label.width(labelWidth);
-                inputs.width(inputWidth);
-
-
-
-            });
-
-            // assign button
-            this.target.find("input[type=submit],button").addClass("-straps-button");
-            // assign primary button
-            this.target.find("[straps-primary-submit]").addClass("-straps-button-primary");
-
-        },
+        }
     };
 
     return __straps_instance_theme;
