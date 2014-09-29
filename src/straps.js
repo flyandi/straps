@@ -66,23 +66,31 @@ var Straps = {
 
     // (cycleAttributes)
     cycleAttributes: function(target, map, settings) {
+        // init
+        var that = this;
         // settings
         settings = settings ? settings : {};
         // cycle
         map.cycle(function(key, params) {
-            // prepare key
-            if(!settings.nostrap) key = 'straps-' + key;
-
-            // get attribute
-            var attribute = target.attributes[key];
+            // get value
+            var value =  that.attribute(target, key, false, settings.nostrap);
     
             // validate
-            if(attribute) {
-                if(attribute.value.toLowerCase() == params[0].toLowerCase()) {
+            if(value) {
+                if(value.value.toLowerCase() == params[0].toLowerCase()) {
                     params[1]();
                 }
             }
         });
+    },
+
+    // (attribute)
+    attribute: function(target, name, def, nostrap) {
+        // create name
+        if(!nostrap) name = 'straps-' + name;
+
+        // check
+        return target.attributes[name] ? target.attributes[name] : (def ? def : false);
     },
 
     // (find) 
@@ -105,7 +113,7 @@ var Straps = {
                     }
                 });
                 break;
-                
+
             case typeof fn == "number":
                 result = result[fn] && result[fn] instanceof HTMLElement ? result[fn] : false;
                 break;
@@ -117,6 +125,8 @@ var Straps = {
         // return result
         return result;
     },
+
+
 
     // (__load) 
     __load: function() {

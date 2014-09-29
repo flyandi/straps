@@ -62,7 +62,9 @@ var __straps_instance_form = (function(){
 
             // get aspects
             var that = this, aspects = {
-                width: this.target.clientWidth
+                width: this.target.clientWidth,
+                ratioLabel: this.parent.attribute(this.target, 'ratio-label', 3),
+                ratioInput: this.parent.attribute(this.target, 'ratio-input', 6)
             };
 
             // find fields
