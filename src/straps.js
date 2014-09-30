@@ -9,27 +9,31 @@
 
 
 /**
-  * (DEBUG)
-  */
-var jd = function(s) {alert(JSON.stringify(s));};
-
-
-/**
  * (constants)
  */
 
 
 var
     // global
-    LS_LIB_SELF = "straps.js",
+    STRAPS_LIB_SELF = "straps.js",
+    STRAPS_LIB_DEBUG = true,
 
     // Structs
-    LS_TAGS = {
+    STRAPS_ATTRIBUTES = ['s-', 'straps-'],
+
+    STRAPS_TAGS = {
         div: 'div',
         form: 'form',
         css: 'link',
         link: 'link',
         script: 'script',
+    },
+
+    STRAPS_CLASS_OPERATION = {
+        add: 0,
+        remove: 1,
+        replace: 2,
+        toggle: 3
     };
 
 
@@ -74,11 +78,19 @@ var Straps = {
         map.cycle(function(key, params) {
             // get value
             var value =  that.attribute(target, key, false, settings.nostrap);
-    
+        
             // validate
             if(value) {
-                if(value.value.toLowerCase() == params[0].toLowerCase()) {
-                    params[1]();
+                switch(true) {
+                    case typeof params == "function":
+                        params(value.value, value);
+                        break;
+
+                    case typeof params == "object" && typeof params[1] == "function":
+                        if(value.value.toLowerCase() == params[0].toLowerCase()) {
+                            params[1](value.value, value);
+                        }
+                        break;
                 }
             }
         });
@@ -87,7 +99,11 @@ var Straps = {
     // (attribute)
     attribute: function(target, name, def, nostrap) {
         // create name
-        if(!nostrap) name = 'straps-' + name;
+        if(!nostrap) STRAPS_ATTRIBUTES.forEach(function(s) {
+            if(target.attributes[s+name]) {
+                name = s + name;
+            }
+        });
 
         // check
         return target.attributes[name] ? target.attributes[name] : (def ? def : false);
@@ -127,6 +143,45 @@ var Straps = {
     },
 
 
+    // (classnames)
+    classnames: function(target, names, operation) {
+        try {
+            // init
+            var onames = target.className.split(" ");
+            // check names
+            if(typeof names == "string") names = names.split(",");
+            // cycle
+            if(names instanceof Array) {
+                // no replace
+                switch(true) {
+                    // replace
+                    case operation = STRAPS_CLASS_OPERATION.replace:
+                        onames = names;
+                        break;
+
+                    // add/remove
+                    default:
+                        names.forEach(function(name) {
+                            switch(true) {
+                                case operation == STRAPS_CLASS_OPERATION.remove: 
+                                    var index = onames.indexOf(name);
+                                    if(index != -1) onames.splice(index, 1);
+                                    break;
+                                default:
+                                    if(onames.indexOf(name) == -1) onames.push(name);
+                                    break;
+                            }
+                        });
+                }
+                // assign
+                target.className = onames.join(" ");
+            }
+        } catch(e) {
+           console.log(e);
+        }
+    },
+
+
 
     // (__load) 
     __load: function() {
@@ -139,7 +194,7 @@ var Straps = {
         // verify
         if(this.scriptTag) {
             // get path
-            this.scriptPath = this.scriptTag.src.replace(LS_LIB_SELF, "");
+            this.scriptPath = this.scriptTag.src.replace(STRAPS_LIB_SELF, "");
             // map
             this.cycleAttributes(this.scriptTag, {
                 autodetect: ['true', function() {
@@ -176,10 +231,15 @@ var Straps = {
     // (__attach)
     __attach: function(name, target) {
         // initialize
+
         var that = this,
             module = this.__requiremodule(name, function() {
                 that.__attach(name, target);
             });
+
+        // verify
+        if(!module) return;
+
         // try module
         try {
             // create instance
@@ -189,8 +249,8 @@ var Straps = {
             instance.attach(target);
 
         } catch(e) {
+            alert(e);
         }   
-
     },
 
     // (__requiremodule)
@@ -222,7 +282,7 @@ var Straps = {
 
         // switch tag type
         switch(tag) {
-            case LS_TAGS.css:
+            case STRAPS_TAGS.css:
                 element = document.createElement('link');
                 element.href = src;
                 element.rel = "stylesheet";
@@ -252,7 +312,7 @@ var Straps = {
                     try {
                         fn(key, ref[key]);
                     } catch(e) {
-                        alert(e);
+                        this.__report(e);
                     }
                 }
             });
@@ -274,6 +334,13 @@ var Straps = {
             });
         };
     },
+
+    // (__report)
+    __report: function(e) {
+        if(STRAPS_LIB_DEBUG) {
+            console.log(e);
+        }
+    }
 
 };
 

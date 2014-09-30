@@ -41,3 +41,7 @@ form h3 {
 form fieldset {
 	border:0;
 }
+
+form fieldset input.straps-violation {
+	border-color:red;
+}

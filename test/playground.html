@@ -25,28 +25,32 @@
 
 					<field>
 						<label>Name</label>
-						<input name="lastname" validation="true" default="" />
+						<input name="lastname" default="" />
 					</field>
 					<field>
 						<label>Multi Name</label>
-						<input name="mfirst" />
-						<input name="mlast" />
+						<input name="mfirst" straps-required="true" />
+						<input name="mlast" straps-required="true" />
+					</field>
+					<field>
+						<label>E-Mail</label>
+						<input name="email" straps-required="email" default="" />
 					</field>
 					<field>
 						<label>ZIP</label>
-						<input name="zip" size="5" />
+						<input name="zip" straps-required="zip" size="5" />
 					</field>
 
 					<field>
 						<label>Numeric</label>
-						<input name="numbers" numeric />
+						<input name="numbers" straps-numeric straps-required=">100" />
 					</field>
 
 
 					</field>
 
 					<field>
-						<input type="submit" straps-primary-submit />
+						<input type="submit" s-primary-submit />
 
 					</field>
 				</fieldset>
