@@ -215,9 +215,6 @@ var Straps = {
                 // attach to form
                 that.__attach('form', anchor);
             },
-            'input, textarea': function(anchor) {
-                //that.__attach('spam', anchor);
-            },
         }).cycle(function(tag, exec) {
             // get tags
             var matches = document.querySelectorAll(tag);
@@ -333,6 +330,11 @@ var Straps = {
                 if(typeof fn == "function") fn(key, value);
             });
         };
+
+        // straps::rid
+        Straps.rid = function(c) {
+            return (c ? c : 'xxxysxx4xxxxxxxxxxx').replace(/[xy]/g, function(c){var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16);}).toUpperCase();
+        };
     },
 
     // (__report)
@@ -401,7 +403,7 @@ var __straps_instance_form = (function(){
 
             // assign reference
             this.target = target;
-
+            this.tokens = {};
 
             // check attributes
             this.parent.cycleAttributes(target, {
@@ -411,6 +413,11 @@ var __straps_instance_form = (function(){
                 }]
             });
 
+            // hooks
+            this.parent.find("input:not([type=submit]),select,textarea", this.target, function(input) {
+                that.__naturalhook(input);
+            });
+
             // hook submit
             this.target.addEventListener("submit", function(event) {
                 // run validation process
@@ -418,6 +425,63 @@ var __straps_instance_form = (function(){
                     event.preventDefault();
                 }
             });
+
+            // create naturals
+            this.naturals = {
+                begin: new Date(),
+                _keyticks: [],
+                _mouseticks: [],
+            };
+
+            // create mouse naturals
+            var mousetimer = false, mouse = false; 
+            document.addEventListener('mousemove', function(event) {
+                // clear
+                if(mousetimer) clearTimeout(mousetimer);
+                // save position
+                if(!mouse) mouse = {x: event.pageX, y: event.pageY};
+                // run
+                mousetimer = setTimeout(function() {
+                    // distances
+                    var dx = event.pageX > mouse.x ? event.pageX - mouse.x : mouse.x - event.pageX,
+                        dy = event.pageY > mouse.y ? event.pageY - mouse.y : mouse.y - event.pageY;
+                    // 
+
+                    console.log(dx + " x " + dy);
+
+                    // reset
+                    mousetimer = false; mouse = false;
+                }, 250);
+            });
+
+        },
+
+        // (__naturalhook)
+        __naturalhook: function(input) {
+
+            // create jar hunter
+            var that = this,
+                jartoken = input.name + this.parent.rid('sxxx1yx'),
+                jar = document.createElement('input');
+
+            jar.type = "hidden";
+            jar.name = jartoken;
+            jar.value = "";
+
+            input.parentNode.appendChild(jar);
+            this.tokens[jartoken] = {
+                reference: input
+            };
+
+            // create nat hook
+            input.addEventListener("keypress", function(event) {
+                that.__naturaltick(0, this);
+            }, false);
+
+        },
+
+        // (__naturaltick)
+        __naturaltick: function(source, input) {
 
         },
 
@@ -456,8 +520,6 @@ var __straps_instance_form = (function(){
         },
 
 
-
-
         // (__filterinput)
         __filterstring: function(s, filter, settings) {
             // initialize
@@ -466,6 +528,7 @@ var __straps_instance_form = (function(){
             // (true)
             switch(true) {
 
+                // (email)
                 case (/email/gi).test(filter):
                     result = (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(s);
                     break;
@@ -542,66 +605,5 @@ Straps.register('form', {
     invoke: function(origin) {
         // create new instance
         return new __straps_instance_form(origin);
-    },
-});
-;/**
- * Straps - a modern approach for Affiliate Lead Marketing Landing Pages
- * Copyright (c) 2014 - All rights reserved
- * 
- * written by Andy Gulley (http://www.github.com/flyandi/straps/)
- * 
- * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
- */
-
-
-/**
- * (constants)
- */
-
-/**
- * (__straps_instance_theme) Object
- */
- 
-var __straps_instance_theme = (function(){
-
-    function __straps_instance_theme(origin) {
-        // settings
-        this.parent = origin;
-
-        // run construct
-        this.__construct();
-    }
-
-    __straps_instance_theme.prototype = {
-
-        // (constructor)
-        __construct: function() {
-
-        },
-
-        // (attach)
-        attach: function(target) {
-            // initialize
-            var that = this;
-        }
-    };
-
-    return __straps_instance_theme;
-})();
-
-
-/**
- * (register instance)
- */
-
-Straps.register('theme', {
-
-    // (hooks)
-    hooks: ['theme'],
-
-    // (invoke)
-    invoke: function(origin) {
-        // create new instance
-        return new __straps_instance_theme(origin);
     },
 });

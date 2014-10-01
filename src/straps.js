@@ -215,9 +215,6 @@ var Straps = {
                 // attach to form
                 that.__attach('form', anchor);
             },
-            'input, textarea': function(anchor) {
-                //that.__attach('spam', anchor);
-            },
         }).cycle(function(tag, exec) {
             // get tags
             var matches = document.querySelectorAll(tag);
@@ -332,6 +329,11 @@ var Straps = {
             this.forEach(function(value, key) {
                 if(typeof fn == "function") fn(key, value);
             });
+        };
+
+        // straps::rid
+        Straps.rid = function(c) {
+            return (c ? c : 'xxxysxx4xxxxxxxxxxx').replace(/[xy]/g, function(c){var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8); return v.toString(16);}).toUpperCase();
         };
     },
 
