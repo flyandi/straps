@@ -205,7 +205,6 @@ var Straps = {
     },
 
 
-
     // (__load) 
     __load: function() {
         // initialize
