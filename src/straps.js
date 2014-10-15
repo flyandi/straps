@@ -59,6 +59,7 @@ var
         toggle: 3
     };
 
+var jd = function(d) {alert(JSON.stringify(d));};    
 
 /**
  * (Straps) main object
@@ -204,6 +205,39 @@ var Straps = {
         }
     },
 
+    // (triggerEvent)
+    triggerEvent: function(target, name, data) {
+        // initialize
+        var event;
+        // assign
+        data = data ? data : {};
+        // create event
+        if(window.CustomEvent) {
+            event = new CustomEvent(name, {detail: data});
+        } else {
+            event = document.createEvent('CustomEvent');
+            event.initCustomEvent(name, true, true, data);
+        }
+        // dispatch
+        target.dispatchEvent(event);
+    },
+
+    // (extend)
+    extend: function(out) {
+        out = out || {};
+
+        for (var i = 1; i < arguments.length; i++) {
+            if (!arguments[i])
+                continue;
+
+            for (var key in arguments[i]) {
+             if (arguments[i].hasOwnProperty(key))
+                 out[key] = arguments[i][key];
+            }
+        }
+
+        return out;
+    },
 
     // (__load) 
     __load: function() {
@@ -231,6 +265,7 @@ var Straps = {
         // initialize
         var that = this;
 
+
         // autodetection
         ({
             form: function(anchor) {
@@ -240,7 +275,12 @@ var Straps = {
 
             _mask: function(anchor) {
                 that.__attach('mask', anchor);
-            }
+            },
+
+            _theme: function(anchor) {
+                that.__attach('theme', anchor);
+            },
+            
         }).cycle(function(tag, exec) {
             // prepare tag
             if(tag.substr(0, 1) == "_") {
@@ -250,9 +290,9 @@ var Straps = {
                 });
                 tag = d.join(",");
             }
+
             // get tags
             var matches = document.querySelectorAll(tag);
-            
             // validate
             if(matches) Array.prototype.slice.call(matches).forEach(function(anchor) {
                 exec(anchor);
@@ -272,16 +312,19 @@ var Straps = {
         // verify
         if(!module) return;
 
-        // try module
-        try {
-            // create instance
+
+        // create instance
             var instance = module.invoke(this);
             
             // attach instance
             instance.attach(target);
 
+        // try module
+        try {
+           
+
         } catch(e) {
-            alert(e);
+            console.log(e);
         }   
     },
 

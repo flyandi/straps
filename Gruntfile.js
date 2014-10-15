@@ -1,5 +1,6 @@
 module.exports = function (grunt) {
 
+    var banner = '/** Straps Library <%= pkg.version %>, Copyright (c) 2014 Andy Gulley (http://www.github.com/flyandi) */\n';
     grunt.initConfig({
 
         pkg  : grunt.file.readJSON('package.json'),
@@ -17,7 +18,7 @@ module.exports = function (grunt) {
         
         uglify: {
             options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+                banner: banner,
             },
             build: {
                 files: {
@@ -29,7 +30,7 @@ module.exports = function (grunt) {
         cssmin: {   
             dist: {
                 options: {
-                    banner: '/* Straps Reset Stylesheet <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */'
+                    banner: banner
                 },
                 files: {
                     'build/<%= pkg.name %>.css': ['src/css/*.css']

@@ -1,6 +1,6 @@
 {
   "name": "straps",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "repository": "git://github.com/flyandi/straps.git",
   "scripts": {

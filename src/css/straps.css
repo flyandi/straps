@@ -1,3 +1,36 @@
+/**
+ * Straps Library
+ * @version: v1.0.0
+ * @author: Andy Gulley
+ *
+ * Created by Andy Gulley. Please report any bug at http://github.com/flyandi/straps
+ *
+ * Copyright (c) 2014 Andy Gulley http://github.com/flyandi
+ *
+ * The MIT License (http://www.opensource.org/licenses/mit-license.php)
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 form {
 	display:block;
 }
@@ -13,4 +46,51 @@ form fieldset field {
 form label {
 	display:inline-block;
 }
+
+.-straps-theme.pure input, .-straps-theme.pure select, .-straps-theme.pure textarea { 
+	padding:4px 5px;
+	border:1px solid #d6d6d8;
+
+}
+
+.-straps-theme.pure input.straps-violation, .-straps-theme.pure select.straps-violation, .-straps-theme.pure textarea.straps-violation {
+
+}
+
+.-straps-theme.pure input[type=submit], .-straps-theme.pure button, .-straps-theme.pure .-straps-button {
+    font-family: inherit;
+    font-size: 100%;
+    *font-size: 90%; /*IE 6/7 - To reduce IE's oversized button text*/
+    *overflow: visible; /*IE 6/7 - Because of IE's overly large left/right padding on buttons */
+    padding: 0.5em 1em;
+    color: #fff;
+    border: 1px solid #999;  /*IE 6/7/8*/
+    border: none rgba(0, 0, 0, 0);  /*IE9 + everything else*/
+    background-color: #7A4F8C;
+    text-decoration: none;
+    border-radius: 2px;
+    cursor:pointer;
+}
+
+.-straps-theme.pure input[type=submit].red, .-straps-theme.pure input[type=submit][red], .-straps-theme.pure button.red, .-straps-theme.pure .-straps-button.red {
+	background-color: #C84B4B;
+}
+
+.-straps-theme.pure input[type=submit].blue, .-straps-theme.pure input[type=submit][blue], .-straps-theme.pure button.blue, .-straps-theme.pure .-straps-button.blue {
+	background-color: #468CC2;
+}
+
+.-straps-theme.pure input[type=submit].green, .-straps-theme.pure input[type=submit][green], .-straps-theme.pure button.green, .-straps-theme.pure .-straps-button.green {
+	background-color: #4F8F68;
+}
+
+.-straps-theme.pure input[type=submit].silver, .-straps-theme.pure input[type=submit][silver], .-straps-theme.pure button.silver, .-straps-theme.pure .-straps-button.silver {
+	background-color: #989997;
+}
+
+.-straps-theme.pure fieldset field {
+	margin-bottom:4px;
+}
+
+
 
