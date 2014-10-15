@@ -31,6 +31,15 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/**
+  * constants
+  */
+var STRAPS_FILTER_TYPES = {
+    default: 0, 
+    email: 1,
+    zip: 2,
+    phone: 3,
+};
 
 /**
  * (__straps_instance_form) Object
@@ -219,10 +228,10 @@ var __straps_instance_form = (function(){
         // (__submithandler)
         __submithandler: function() {
             // initialize
-            var that = this, violations = 0, naturals = [], count = 0, nl = true;
-
-
-            // get all input
+            var that = this, violations = 0, naturals = [], count = 0, nl = true
+                haspopup = (this.parent.attribute("no-validation-popup")).value != "true";
+        
+            // cycle all inputs
             this.parent.find("input:not([type=submit]),select,textarea", this.target, function(input) {
 
                 // get value of input
@@ -231,10 +240,16 @@ var __straps_instance_form = (function(){
                 // check straps field
                 that.parent.cycleAttributes(input, {
                     required: function(filter) {
-                        if(!that.__filter(value, filter)) {
+                        // get filter
+                        var fr = that.__filter(value, filter);
+                        // check result
 
+                        // filter values
+                        if(fr.violation) {
                             // reported rule violation
                             that.parent.classnames(input, 'straps-violation');
+                            // attach popup
+                            if(haspopup) that.__attachpopup(input, fr);
                             // count up
                             violations++;
                         }
@@ -291,23 +306,65 @@ var __straps_instance_form = (function(){
             return false;
         },
 
+        // (__attachpopup)
+        __attachpopup: function(target, fr) {
+            var that = this;
+            // initialize
+            if(!target.straps) target.straps = {};
+            // assign popup
+            if(!target.straps.violationpop) {
+                // lock
+                target.straps.violationpop = true;
+
+                // assign event
+                target.addEventListener("focus", function() {
+                    that.__showpopup(target)
+                });
+                target.addEventListener("blur", function() {
+                    that.__
+                });
+            }
+            // update reason
+            target.straps.violationreason = fr;
+        },
+
+        // (__showpopup) 
+        __showpopup: function(target) {
+            // find existing popup
+            // var popup = document.
+
+
+        },
+
 
         // (__filter)
         __filter: function(s, filter, settings) {
             // initialize
-            var that = this, result = false;
+            var that = this, result = {
+                violation: false,
+                filterused: STRAPS_FILTER_TYPES.default,
+
+            };
 
             // (true)
             switch(true) {
 
                 // (email)
                 case (/email/gi).test(filter):
-                    result = (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(s);
+                    result.violation = (/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/).test(s);
+                    result.filterused = STRAPS_FILTER_TYPES.email;
                     break;
 
                 // (zip)
                 case (/zip/gi).test(filter): 
-                    result = (/(^\d{5}$)|(^\d{5}-\d{4}$)/).test(s);
+                    result.violation = (/(^\d{5}$)|(^\d{5}-\d{4}$)/).test(s);
+                    result.filterused = STRAPS_FILTER_TYPES.zip;
+                    break;
+
+                // (phone)
+                case (/phone/gi).test(filter):
+                    result.violation = false;
+                    result.filterused = STRAPS_FILTER_TYPES.phone;
                     break;
 
 
