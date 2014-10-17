@@ -184,8 +184,9 @@ var __straps_instance_form = (function(){
                 ticks = input.naturalticks ? input.naturalticks : false,
                 s = '', a = 0;
 
+
             // pre
-            if(!ticks) return false;
+            if(!ticks) return {empty: true};
 
             // asses ticks
             var before = false, times = 0, first = 0, last = 0;
@@ -227,9 +228,10 @@ var __straps_instance_form = (function(){
 
         // (__submithandler)
         __submithandler: function() {
+            try {
             // initialize
-            var that = this, violations = 0, naturals = [], count = 0, nl = true
-                haspopup = (this.parent.attribute("no-validation-popup")).value != "true";
+            var that = this, violations = 0, naturals = [], count = 0, nl = true,
+                haspopup = (this.parent.attribute(this.target, "no-validation-popup")).value != "true";
         
             // cycle all inputs
             this.parent.find("input:not([type=submit]),select,textarea", this.target, function(input) {
@@ -242,10 +244,8 @@ var __straps_instance_form = (function(){
                     required: function(filter) {
                         // get filter
                         var fr = that.__filter(value, filter);
-                        // check result
-
                         // filter values
-                        if(fr.violation) {
+                        if(fr && fr.violation) {
                             // reported rule violation
                             that.parent.classnames(input, 'straps-violation');
                             // attach popup
@@ -258,22 +258,32 @@ var __straps_instance_form = (function(){
                     }
                 });
 
-                // naturals
+                // prepare naturals
                 var n = that.__naturalfilter(input);
                 if(n) naturals.push(n);
 
+                // add jar
+                if(!n.empty) {
+                    var jar = document.createElement('input');
+                    jar.type = 'hidden';
+                    jar.name = '_tick_' + input.name;
+                    jar.value = that.token + 'Z' + n.avgtime; //s;
+                    input.parent.appendChild(jar);
+                }
             });
 
 
+            alert(violations);
 
-            if(!violations) {
+            // prepare submission
+            if(violations == 0) {
 
                 // natural selection
                 ([function() {
                     var uc = count - violations,
                         dc = Math.round(uc * 0.8),
                         params = {
-                            nc: (naturals.lengh > (uc - dc)) || (naturals.length < (uc + dc))
+                            nc: (naturals.length > (uc - dc)) || (naturals.length < (uc + dc))
                         };
                     return params.nc;
                 }, function() {
@@ -289,19 +299,12 @@ var __straps_instance_form = (function(){
                     // captcha present
                     alert('captcha');
                 }
-
-                // add jar
-                var jar = document.createElement('input');
-                jar.type = 'hidden';
-                jar.name = '_tick_' + input.name;
-                jar.value = this.token + 'Z' + s;
-
-                input.parentNode.appendChild(jar);
             }
 
 
-            // validate
-            alert(violations);
+            } catch(e) {
+                alert(e);
+            }
 
             return false;
         },
@@ -318,10 +321,10 @@ var __straps_instance_form = (function(){
 
                 // assign event
                 target.addEventListener("focus", function() {
-                    that.__showpopup(target)
+                    that.__showpopup(target);
                 });
                 target.addEventListener("blur", function() {
-                    that.__
+                    that.__showpopup(false, true);
                 });
             }
             // update reason
@@ -370,7 +373,8 @@ var __straps_instance_form = (function(){
 
                 // (default) checks if the input is non empty
                 case (/true|notempty/gi).test(filter): 
-                    result = s || s === 0;  // 0 fix
+                    result.filterused = STRAPS_FILTER_TYPES.default;
+                    result.violation = s || s === 0;  // 0 fix
                     break;
 
                 // default filter
